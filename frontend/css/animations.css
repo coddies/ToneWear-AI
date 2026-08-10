@@ -1,0 +1,403 @@
+/* =============================================================================
+   TONEWEAR AI — ANIMATIONS CSS
+   animations.css — All keyframes and animation utilities
+   ============================================================================= */
+
+/* ══════════════════════════════════════════════
+   KEYFRAMES
+   ══════════════════════════════════════════════ */
+
+/* Fade + Slide Up */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade In */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Fade In Down */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scale In (Modal/Card entry) */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Slide In Right (Toast) */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(110%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Slide Out Right (Toast dismiss) */
+@keyframes slideOutRight {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(110%); }
+}
+
+/* Float (Hero card) */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* Float (Blobs) */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) scale(1); }
+  33%       { transform: translateY(-20px) scale(1.05); }
+  66%       { transform: translateY(10px) scale(0.97); }
+}
+
+/* Spin */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Shimmer skeleton */
+@keyframes shimmer {
+  0%   { background-position: -1000px 0; }
+  100% { background-position:  1000px 0; }
+}
+
+/* Toast progress bar */
+@keyframes toastProgress {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* Typewriter cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Alias for blinkCursor (used in components.css typewriter) */
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Pulse glow */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 86, 219, 0.30); }
+  50%       { box-shadow: 0 0 0 12px rgba(26, 86, 219, 0); }
+}
+
+/* Gradient flow */
+@keyframes gradientFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Bounce */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* Connecting line fill */
+@keyframes lineGrow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* Scanning line (glasses face detection) */
+@keyframes scanLine {
+  0%   { top: 10%; opacity: 1; }
+  90%  { top: 90%; opacity: 1; }
+  100% { top: 10%; opacity: 0; }
+}
+
+/* Step number pulse */
+@keyframes stepPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+/* Progress count up (used by JS) */
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: var(--target-width, 100%); }
+}
+
+/* ══════════════════════════════════════════════
+   SCROLL REVEAL
+   ══════════════════════════════════════════════ */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.fade-in.visible { opacity: 1; }
+
+.scale-in {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.scale-in.visible { opacity: 1; transform: scale(1); }
+
+/* Stagger helpers (delay added by JS dynamically, or use these) */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+.delay-600 { transition-delay: 600ms; }
+.delay-700 { transition-delay: 700ms; }
+.delay-800 { transition-delay: 800ms; }
+
+/* ══════════════════════════════════════════════
+   ONE-SHOT ANIMATION CLASSES
+   ══════════════════════════════════════════════ */
+.animate-fade-up     { animation: fadeSlideUp 0.5s ease both; }
+.animate-fade-in     { animation: fadeIn 0.4s ease both; }
+.animate-fade-down   { animation: fadeInDown 0.4s ease both; }
+.animate-scale-in    { animation: scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.animate-slide-right { animation: slideInRight 0.4s ease both; }
+
+/* ══════════════════════════════════════════════
+   CONTINUOUS ANIMATIONS
+   ══════════════════════════════════════════════ */
+.animate-float     { animation: float 3s ease-in-out infinite; }
+.animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
+.animate-spin      { animation: spin 0.8s linear infinite; }
+.animate-bounce    { animation: bounce 1.4s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+.animate-gradient  {
+  background-size: 200% 200%;
+  animation: gradientFlow 4s ease infinite;
+}
+
+/* ══════════════════════════════════════════════
+   TYPEWRITER
+   ══════════════════════════════════════════════ */
+.typewriter-cursor::after {
+  content: '|';
+  color: var(--primary);
+  animation: blink 0.8s ease-in-out infinite;
+  margin-left: 2px;
+  font-weight: 400;
+}
+
+/* ══════════════════════════════════════════════
+   HERO FLOATING BLOBS
+   ══════════════════════════════════════════════ */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(70px);
+  opacity: 0.15;
+}
+
+.blob-blue   { background: #1A56DB; }
+.blob-purple { background: #7C3AED; }
+.blob-accent { background: #F59E0B; }
+
+/* ══════════════════════════════════════════════
+   STEP CONNECTOR LINE (How It Works)
+   ══════════════════════════════════════════════ */
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  margin: 0 var(--sp-3);
+  align-self: center;
+}
+
+.step-connector::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--gradient);
+  border-radius: 2px;
+  width: 0;
+  transition: width 1.2s ease;
+}
+
+.step-connector.filled::after { width: 100%; }
+
+/* ══════════════════════════════════════════════
+   SCANNING FACE ANIMATION
+   ══════════════════════════════════════════════ */
+.face-scan-container {
+  position: relative;
+  width: 200px;
+  height: 240px;
+  margin: 0 auto;
+}
+
+.face-scan-svg { width: 100%; height: 100%; }
+
+.scan-line {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(26,86,219,0.8), transparent);
+  border-radius: 2px;
+  animation: scanLine 2s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════
+   PROGRESS LOADING STEPS
+   ══════════════════════════════════════════════ */
+.loading-step {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  transition: color var(--t-base), opacity var(--t-base);
+}
+
+.loading-step.active   { color: var(--primary); font-weight: 600; }
+.loading-step.complete { color: var(--success); }
+
+.loading-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-default);
+  flex-shrink: 0;
+  transition: background var(--t-base);
+}
+
+.loading-step.active .loading-step-dot {
+  background: var(--primary);
+  animation: pulseGlow 1s ease-in-out infinite;
+}
+
+.loading-step.complete .loading-step-dot { background: var(--success); }
+
+/* ══════════════════════════════════════════════
+   CARD ENTRANCE (used by JS observer)
+   ══════════════════════════════════════════════ */
+.card-enter {
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card-enter.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ══════════════════════════════════════════════
+   STEP NUMBER ANIMATION
+   ══════════════════════════════════════════════ */
+.step-number {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--gradient);
+  color: #fff;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-btn);
+  position: relative;
+  z-index: 1;
+}
+
+.step-number.pulse { animation: stepPulse 2s ease-in-out infinite; }
+
+/* ══════════════════════════════════════════════
+   HERO DEMO CARD FLOAT
+   ══════════════════════════════════════════════ */
+.hero-demo-card {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Sub-cards inside hero demo stagger */
+.hero-demo-card .sub-card-1 { animation: float 3s ease-in-out infinite; }
+.hero-demo-card .sub-card-2 { animation: float 3.5s ease-in-out 0.5s infinite; }
+
+/* ══════════════════════════════════════════════
+   SHIMMER (used for skeletons)
+   ══════════════════════════════════════════════ */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(26,86,219,0.04) 0%,
+    rgba(26,86,219,0.10) 40%,
+    rgba(26,86,219,0.04) 80%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* ══════════════════════════════════════════════
+   NAV SCROLL BLUR (add via JS)
+   ══════════════════════════════════════════════ */
+.navbar-blur {
+  background: rgba(248, 250, 255, 0.92) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 1px 20px rgba(26,86,219,0.08) !important;
+}
+
+/* ══════════════════════════════════════════════
+   HOVER SCALE CARD
+   ══════════════════════════════════════════════ */
+.hover-scale {
+  transition: transform var(--t-spring), box-shadow var(--t-base);
+}
+.hover-scale:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: var(--shadow-hover);
+}
+
+/* ══════════════════════════════════════════════
+   OCCASION BUTTON SELECT ANIMATION
+   ══════════════════════════════════════════════ */
+.occasion-btn {
+  transition: transform var(--t-spring), box-shadow var(--t-base), border-color var(--t-fast), background var(--t-fast);
+}
+
+.occasion-btn.selected {
+  transform: scale(1.06);
+  border-color: var(--primary);
+  background: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(26,86,219,0.18);
+}
+
+/* ══════════════════════════════════════════════
+   REDUCED MOTION
+   ══════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .fade-up, .fade-in, .scale-in { transition: none; opacity: 1; transform: none; }
+  .blob { animation: none; }
+  .animate-float, .hero-demo-card { animation: none; }
+  .skeleton, .shimmer { animation: none; }
+}

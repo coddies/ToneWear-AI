@@ -1,0 +1,109 @@
+{
+  "color_rules": [
+    {
+      "id": "sk-001",
+      "title": "Warm Undertone Color Guide",
+      "content": "People with warm undertones look best in colors that reflect warmth: navy blue, olive green, cream, camel, burgundy, deep green, terracotta, mustard yellow, and earthy browns. These colors create harmony with the golden or yellow hues in warm skin. Avoid icy pastels, lavender, and stark white.",
+      "tags": ["warm undertone", "color matching", "skin tone", "navy", "olive", "cream", "burgundy"],
+      "category": "color_theory"
+    },
+    {
+      "id": "sk-002",
+      "title": "Cool Undertone Color Guide",
+      "content": "Cool undertones are enhanced by colors with blue or pink bases: royal blue, charcoal grey, black, white, emerald green, cool purple, silver, and soft pink. These colors complement the pink or blue hues in cool skin. Avoid orange, earthy browns, and warm yellows.",
+      "tags": ["cool undertone", "color matching", "royal blue", "charcoal", "emerald", "silver"],
+      "category": "color_theory"
+    },
+    {
+      "id": "sk-003",
+      "title": "Neutral Undertone — Best Colors",
+      "content": "Neutral undertones have the most flexibility. Most colors work well — navy, forest green, burgundy, camel, slate grey, rose, cream, and white. Neutral undertones can experiment with both warm and cool palettes.",
+      "tags": ["neutral undertone", "versatile", "all colors"],
+      "category": "color_theory"
+    },
+    {
+      "id": "sk-004",
+      "title": "Medium Skin Tone Best Colors",
+      "content": "Medium skin tones (olive, wheatish, tan) look stunning in jewel tones: navy blue, deep emerald, burgundy, forest green, and royal purple. Earth tones like olive, camel, and chocolate brown also work beautifully. Avoid very light pastels that may wash out the complexion.",
+      "tags": ["medium skin", "olive skin", "wheatish", "jewel tones", "navy", "emerald"],
+      "category": "skin_tone"
+    },
+    {
+      "id": "sk-005",
+      "title": "Dark Skin Tone Best Colors",
+      "content": "Darker skin tones are complemented by rich, vibrant colors: bright cobalt blue, deep red, emerald green, mustard yellow, burnt orange, and warm cream. These colors create beautiful contrast. White and cream also look striking. Avoid dark brown or very dark colors that reduce contrast.",
+      "tags": ["dark skin", "vibrant colors", "cobalt", "mustard", "contrast"],
+      "category": "skin_tone"
+    },
+    {
+      "id": "sk-006",
+      "title": "Light Skin Tone Best Colors",
+      "content": "Light skin tones are enhanced by deep, rich colors that provide contrast: navy, dark green, burgundy, maroon, charcoal, and black. Pastels can also work for casual occasions. Avoid very light or pale colors that blend with the skin.",
+      "tags": ["light skin", "fair skin", "deep colors", "navy", "dark green", "contrast"],
+      "category": "skin_tone"
+    },
+    {
+      "id": "sk-007",
+      "title": "Eid Outfit Color Guide",
+      "content": "For Eid, choose celebratory and elegant colors. Traditional favorites include white, cream, navy, deep green, maroon, and royal blue. Shalwar Kameez or Kurta in these shades paired with embroidery is ideal. Avoid overly casual or Western-only looks for Eid morning prayer. For Eid gatherings, festive tones like gold, rich burgundy, and teal are excellent.",
+      "tags": ["eid", "occasion", "white", "cream", "navy", "deep green", "shalwar kameez", "kurta"],
+      "category": "occasion"
+    },
+    {
+      "id": "sk-008",
+      "title": "Wedding — Baraat Colors",
+      "content": "For Baraat (wedding day), the groom traditionally wears Sherwani. Popular colors: cream, gold, maroon, navy, black, teal, and beige. Rich embroidery is important. The look should be regal and memorable. Sherwanis should ideally be paired with matching or contrasting churidar pajama and dupatta.",
+      "tags": ["wedding", "baraat", "groom", "sherwani", "cream", "maroon", "gold", "regal"],
+      "category": "occasion"
+    },
+    {
+      "id": "sk-009",
+      "title": "Mehndi Night Colors",
+      "content": "Mehndi night calls for festive, vibrant colors. Yellow, mustard, peach, orange, pink, and lime green are traditional choices. For men, embroidered kurtas in mustard, yellow, peach, or rose are popular. Avoid dark, formal colors on Mehndi night — it is a celebration of color.",
+      "tags": ["mehndi", "festive", "yellow", "mustard", "peach", "rose", "festive colors"],
+      "category": "occasion"
+    },
+    {
+      "id": "sk-010",
+      "title": "Interview and Office Outfit Guide",
+      "content": "For interviews, choose professional and authoritative colors: navy blue, charcoal grey, white, and light grey. A well-fitting suit or formal kurta in these shades projects confidence. Avoid bright colors, patterns, or casual fabrics for interviews. For office, business casual is appropriate: smart kurta or dress shirt in navy, grey, or white.",
+      "tags": ["interview", "office", "professional", "navy", "charcoal", "white", "formal"],
+      "category": "occasion"
+    },
+    {
+      "id": "sk-011",
+      "title": "Pakistani Fashion Color Rules",
+      "content": "Pakistani fashion heavily features white and cream for prayer wear, navy and deep green for formal events, maroon and red for weddings. Summer lawn fabrics are popular in lighter colors. Winter sees heavier fabrics in jewel tones. Sherwani is the quintessential formal wear for weddings and special events.",
+      "tags": ["pakistani", "fashion", "cultural", "lawn", "sherwani", "formal"],
+      "category": "cultural"
+    },
+    {
+      "id": "sk-012",
+      "title": "Indian Festival Color Traditions",
+      "content": "Indian festivals celebrate color: saffron for courage, white for peace, green for prosperity. Diwali calls for warm golden, orange, or deep jewel tones. Weddings feature bright colors — royal blue, emerald, or maroon kurtas for men. Nehru jackets in navy or black add sophistication to wedding attire.",
+      "tags": ["indian", "festival", "diwali", "saffron", "cultural", "jewel tones"],
+      "category": "cultural"
+    },
+    {
+      "id": "sk-013",
+      "title": "Middle Eastern Thobe Color Guide",
+      "content": "Thobes are traditionally white for daily and prayer wear, symbolizing purity. For special occasions, cream and beige thobes with fine embroidery are preferred. A Bisht — the formal cloak — is worn over the Thobe for grand occasions like Eid, graduation, and weddings. Bisht colors: black with gold, camel brown, or navy with silver.",
+      "tags": ["thobe", "bisht", "gulf", "middle eastern", "white", "cream", "bisht"],
+      "category": "cultural"
+    },
+    {
+      "id": "sk-014",
+      "title": "Navy Blue — The Universal Flattering Color",
+      "content": "Navy blue is arguably the most universally flattering color for all skin tones and undertones. It provides depth without being as stark as black, works for both formal and semi-formal occasions, and suits Pakistani, Indian, Middle Eastern, and Western fashion styles. Navy kurtas, sherwanis, suits, and dress shirts all project elegance and authority.",
+      "tags": ["navy blue", "universal", "flattering", "all tones", "formal", "elegant"],
+      "category": "color_theory"
+    },
+    {
+      "id": "sk-015",
+      "title": "Color Combinations that Always Work",
+      "content": "Classic combinations: Navy + Cream (elegant), Olive + Cream (earthy), Maroon + Gold (regal), Black + White (timeless), Deep Green + Cream (fresh formal), Charcoal + Light Blue (smart casual), Burgundy + Beige (warm sophisticated). These pairings create balanced, visually appealing outfits for any occasion.",
+      "tags": ["combinations", "pairing", "navy cream", "olive cream", "maroon gold", "color harmony"],
+      "category": "color_theory"
+    }
+  ]
+}

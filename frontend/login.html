@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — ToneWear AI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #EBF2FF 0%, #EDE9FF 50%, #F8FAFF 100%);
+      padding: 24px;
+    }
+
+    .blob { position: fixed; }
+
+    .auth-card {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.65);
+      border-radius: 28px;
+      box-shadow: 0 20px 80px rgba(26,86,219,0.14);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 440px;
+      animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .auth-logo-icon {
+      width: 44px; height: 44px;
+      background: var(--gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .auth-logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .auth-tagline {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    #sign-in { min-height: 200px; }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .auth-footer a { color: var(--primary); font-weight: 600; }
+
+    /* Fallback form */
+    .fallback-form { display: flex; flex-direction: column; gap: 16px; }
+    .fallback-divider { text-align: center; font-size: 13px; color: var(--text-muted); margin: 8px 0; }
+  </style>
+</head>
+<body>
+
+<!-- Background blobs -->
+<div class="blob blob-blue"   style="width:350px;height:350px;top:-100px;left:-100px;opacity:0.12;filter:blur(70px);animation:floatSlow 7s ease-in-out infinite;"></div>
+<div class="blob blob-purple" style="width:300px;height:300px;bottom:-80px;right:-80px;opacity:0.12;filter:blur(70px);animation:floatSlow 8s ease-in-out 2s infinite;"></div>
+
+<div class="auth-card">
+  <div class="auth-logo">
+    <div class="auth-logo-icon">✨</div>
+    <span class="auth-logo-text">ToneWear AI</span>
+  </div>
+  <div class="auth-tagline">Sign in to your personalized style journey</div>
+
+  <!-- Clerk Sign In -->
+  <div id="sign-in">
+    <!-- Clerk mounts here via auth.js -->
+    <!-- Fallback shown if Clerk is not configured -->
+    <div class="fallback-form">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="window.location.href='analyzer.html'">
+        Sign In →
+      </button>
+      <div class="fallback-divider">or</div>
+      <button class="btn btn-ghost btn-full" onclick="window.location.href='analyzer.html'">
+        Continue as Guest (Demo Mode)
+      </button>
+    </div>
+  </div>
+
+  <div class="auth-footer">
+    Don't have an account? <a href="signup.html">Sign up free</a>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

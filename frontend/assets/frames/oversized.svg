@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150" width="400" height="150">
+  <!-- Bridge -->
+  <line x1="175" y1="75" x2="225" y2="75" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <!-- Temple arms -->
+  <line x1="28" y1="75" x2="5" y2="78" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <line x1="372" y1="75" x2="395" y2="78" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <!-- Left lens - oversized wide rect with big radius -->
+  <rect x="28" y="38" width="147" height="82" rx="16" fill="rgba(0,0,0,0.07)" stroke="#222" stroke-width="4.5"/>
+  <!-- Right lens - oversized wide rect -->
+  <rect x="225" y="38" width="147" height="82" rx="16" fill="rgba(0,0,0,0.07)" stroke="#222" stroke-width="4.5"/>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150" width="400" height="150">
+  <!-- Bridge -->
+  <path d="M178 68 Q200 58 222 68" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <!-- Temple arms -->
+  <line x1="48" y1="70" x2="5" y2="75" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <line x1="352" y1="70" x2="395" y2="75" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <!-- Left lens - trapezoidal wayfarer shape -->
+  <path d="M48 50 L168 46 L175 68 L160 98 L55 98 L42 75 Z" fill="rgba(0,0,0,0.08)" stroke="#222" stroke-width="4.5" stroke-linejoin="round"/>
+  <!-- Right lens -->
+  <path d="M352 50 L232 46 L225 68 L240 98 L345 98 L358 75 Z" fill="rgba(0,0,0,0.08)" stroke="#222" stroke-width="4.5" stroke-linejoin="round"/>
+</svg>

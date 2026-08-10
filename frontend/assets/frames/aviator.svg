@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150" width="400" height="150">
+  <!-- Bridge -->
+  <path d="M175 62 Q200 52 225 62" fill="none" stroke="#B8860B" stroke-width="3" stroke-linecap="round"/>
+  <!-- Temple arms -->
+  <line x1="42" y1="55" x2="5" y2="65" stroke="#B8860B" stroke-width="3" stroke-linecap="round"/>
+  <line x1="358" y1="55" x2="395" y2="65" stroke="#B8860B" stroke-width="3" stroke-linecap="round"/>
+  <!-- Left lens - teardrop/aviator -->
+  <path d="M42 55 Q42 40 112 40 Q178 40 175 62 Q178 100 112 110 Q50 110 42 55 Z" fill="rgba(184,134,11,0.08)" stroke="#B8860B" stroke-width="3.5"/>
+  <!-- Right lens - teardrop/aviator -->
+  <path d="M358 55 Q358 40 288 40 Q222 40 225 62 Q222 100 288 110 Q350 110 358 55 Z" fill="rgba(184,134,11,0.08)" stroke="#B8860B" stroke-width="3.5"/>
+</svg>

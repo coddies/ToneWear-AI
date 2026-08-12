@@ -1,6 +1,5 @@
 # ToneWear AI — Complete Project Documentation
-
-> **One-line pitch:** ToneWear AI helps you discover what suits you, see it on yourself, and shop with confidence.
+> **Last Updated:** August 12, 2026
 
 ---
 
@@ -10,396 +9,241 @@ ToneWear AI is an **AI-powered personalized fashion shopping assistant** that so
 
 > *"Will this color and outfit actually look good on me — before I buy it?"*
 
-The core experience connects five pillars:
-
 ```
-Understand Me → Find What Suits Me → Show Me → Help Me Decide → Buy / Save
+Selfie Upload → Skin AI → Color Profile → RAG Search → AI Ranking → Virtual Try-On → Buy
 ```
 
-### Real Problem It Solves
+---
 
-| Problem | ToneWear Solution |
+## 2. Current Status — Kya Ho Chuka Hai
+
+### ✅ Poora Ho Gaya
+
+| Cheez | Details |
 |---|---|
-| Will this color suit my skin tone? | YouCam Skin AI → Personal Color Profile |
-| Will this style look good on me? | RAG retrieval → Personalized Products |
-| How will it look on my actual photo? | YouCam Apparel VTO |
-| Which product should I choose? | AI ranking + "Why this?" explanation |
-| I already own something similar? | Custom Clothes Try-On |
+| **Frontend** — 8 pages | index, shop, analyzer, tryon, glasses, remedies, login, signup |
+| **Backend** — FastAPI | 6 API routes, 4 services |
+| **Groq AI** (replaces Claude) | `llama-3.3-70b-versatile` — outfit ranking + explanations + remedies + glasses |
+| **Pinecone** vector search | Index: `tonewear-fashion`, llama-text-embed-v2 |
+| **YouCam** keys set | `YOUCAM_CLIENT_ID` + `YOUCAM_PUBLIC_KEY` in `.env` |
+| **50 products** catalog | Pakistani, Indian, Middle Eastern, Western |
+| **Style knowledge base** | 15 color theory + cultural fashion rules |
+| **Demo mode** | Sab kuch bina API ke bhi chalega (mock data) |
+| **GitHub** | https://github.com/coddies/ToneWear-AI |
+| **uv** package management | Project-level `.venv`, no global pip |
 
 ---
 
-## 2. Core User Flow
+## 3. Kya Baki Hai (Remaining)
 
-```
-Selfie Upload
-      ↓
-YouCam Skin AI
-      ↓
-Personal Style Profile
-(Skin Tone · Undertone · Color Families · Style Direction)
-      ↓
-RAG / Vector Search
-(Query: occasion + budget + skin profile)
-      ↓
-Personalized Products + Colors
-      ↓
-AI "Why this?" Explanation
-      ↓
-YouCam Apparel Virtual Try-On
-      ↓
-Try On → Compare → Save / View Product / Buy
-```
+### 🔴 Critical — Abhi Karna Hai
 
----
+| # | Kaam | Kyun Zaruri |
+|---|---|---|
+| 1 | **YouCam API endpoints verify karo** | `youcam.py` mein URLs guessed hain — actual docs se confirm karo |
+| 2 | **Vercel par frontend deploy** | Public URL milegi, YouCam register hoga |
+| 3 | **Railway par backend deploy** | Live backend chahiye production ke liye |
+| 4 | **YouCam URL register** | yce.makeupar.com pe apni deployed URL submit karo |
 
-## 3. Tech Stack
+### 🟡 Important — Jald Karna Hai
 
-| Layer | Technology |
+| # | Kaam | Details |
+|---|---|---|
+| 5 | **Pinecone index populate karo** | Products data vectorize karke Pinecone mein daalo |
+| 6 | **Clerk auth keys** | Login/signup actually kaam kare iske liye |
+| 7 | **YouCam skin analysis response parse** | Real API se response aane ke baad `_parse_youcam_skin()` update karo |
+| 8 | **Products mein real images** | `image_url` mein real product photos daalo |
+
+### 🟢 Nice to Have
+
+| # | Kaam |
 |---|---|
-| Frontend | HTML / Vanilla CSS / Vanilla JS |
-| Backend | Python + FastAPI |
-| Skin AI | YouCam Skin AI API |
-| Apparel VTO | YouCam Apparel VTO API |
-| AI Reasoning | Anthropic Claude API (claude-sonnet-4-6) |
-| Vector Search | ChromaDB (local, persistent) |
-| Embeddings | sentence-transformers (all-MiniLM-L6-v2) |
-| Auth | Clerk (Vanilla JS SDK) |
-| Storage | JSON files (hackathon-grade) |
-| Hosting | Vercel (frontend) + Railway/Render (backend) |
+| 9 | Payment integration (Stripe/local gateway) |
+| 10 | User history save karna |
+| 11 | Wishlist feature |
+| 12 | Mobile app (React Native) |
 
 ---
 
-## 4. Architecture
+## 4. API Keys Status
 
-```
-FRONTEND (HTML/JS)
-  index.html  shop.html  analyzer.html  tryon.html  history.html
-         |
-         | HTTP / JSON
-         |
-FASTAPI BACKEND
-  /api/skin/analyze      → YouCam Skin AI
-  /api/recommendations   → RAG + Claude ranking
-  /api/tryon/generate    → YouCam Apparel VTO
-  /api/tryon/custom      → Custom clothes VTO
-  /api/products          → Catalog
-  /api/history           → Session storage
-         |
-  ┌──────────────────────────┐
-  │  YouCam  │ ChromaDB │ Claude │
-  └──────────────────────────┘
-```
+| Service | Key | Status |
+|---|---|---|
+| **Groq AI** | `gsk_woiF...` | ✅ Set in `.env` |
+| **Pinecone** | `pcsk_4mwa...` | ✅ Set in `.env` |
+| **YouCam** Client ID | `sk-cuL7...` | ✅ Set in `.env` |
+| **YouCam** Public Key | `MIGfMA0G...` | ✅ Set in `.env` |
+| **Clerk** | — | ❌ Abhi nahi |
+| **YouCam** registered URL | — | ❌ Deploy ke baad |
 
 ---
 
-## 5. Complete Folder Structure
+## 5. Project Structure
 
 ```
 tonewear-ai/
-├── frontend/
-│   ├── index.html              ← Landing page
-│   ├── shop.html               ← NEW: Main shopping + RAG page
-│   ├── analyzer.html           ← Skin analysis
-│   ├── tryon.html              ← Apparel VTO
-│   ├── glasses.html            ← Glasses try-on (secondary)
-│   ├── history.html            ← Past sessions
-│   ├── remedies.html           ← Skin remedies (secondary)
-│   ├── login.html
-│   ├── signup.html
+│
+├── frontend/                    ← Static HTML/CSS/JS Website
+│   ├── index.html               ← Landing page (hero, features, how-it-works)
+│   ├── shop.html                ← Main AI shopping page (selfie → outfits → try-on)
+│   ├── analyzer.html            ← Standalone skin tone analyzer
+│   ├── tryon.html               ← Virtual try-on (recommended + custom clothes)
+│   ├── glasses.html             ← Glasses virtual try-on
+│   ├── remedies.html            ← AI skin remedies
+│   ├── login.html / signup.html ← Clerk auth pages
 │   ├── css/
-│   │   ├── style.css
-│   │   ├── components.css
-│   │   └── animations.css
-│   ├── js/
-│   │   ├── app.js
-│   │   ├── auth.js
-│   │   ├── api.js
-│   │   ├── analyzer.js
-│   │   ├── shop.js             ← NEW: RAG search + product cards
-│   │   ├── tryon.js
-│   │   ├── glasses.js
-│   │   └── remedies.js
-│   └── assets/
-│       ├── frames/
-│       └── outfits/
-├── backend/
-│   ├── main.py
-│   ├── schemas.py
-│   ├── requirements.txt
-│   ├── .env.example
-│   ├── api/
-│   │   ├── skin.py
-│   │   ├── tryon.py
-│   │   ├── recommendations.py  ← NEW
-│   │   ├── products.py         ← NEW
-│   │   ├── glasses.py
-│   │   ├── remedies.py
-│   │   └── history.py
-│   ├── services/
-│   │   ├── youcam.py
-│   │   ├── rag_service.py      ← NEW
-│   │   ├── recommendation_service.py ← NEW
-│   │   ├── claude_ai.py
-│   │   └── storage.py
-│   ├── data/
-│   │   ├── products.json       ← NEW: 50+ demo catalog
-│   │   └── style_knowledge.json ← NEW: Color theory
-│   └── vectorstore/            ← NEW: ChromaDB storage
-├── TONEWEAR_PROJECT.md
-├── PROJECT.md
-└── .gitignore
+│   │   ├── style.css            ← Global design system (variables, typography)
+│   │   ├── components.css       ← Navbar, sidebar, cards, buttons, product cards
+│   │   └── animations.css       ← Micro-animations, keyframes
+│   └── js/
+│       ├── api.js               ← All fetch calls to backend (single source)
+│       ├── shop.js              ← Main shopping flow logic
+│       ├── app.js               ← Global utils (theme, toast, auth check)
+│       ├── auth.js              ← Clerk authentication
+│       ├── analyzer.js          ← Skin analyzer page logic
+│       ├── tryon.js             ← Virtual try-on logic
+│       ├── glasses.js           ← Glasses try-on logic
+│       └── remedies.js          ← Remedies page logic
+│
+├── backend/                     ← Python FastAPI Backend
+│   ├── main.py                  ← FastAPI app entry point + lifespan (Pinecone init)
+│   ├── schemas.py               ← Pydantic models (request/response)
+│   ├── pyproject.toml           ← uv dependencies
+│   ├── railway.toml             ← Railway deployment config
+│   ├── .env                     ← API keys (NOT on GitHub)
+│   ├── .env.example             ← Template for keys
+│   │
+│   ├── api/                     ← API Route Handlers
+│   │   ├── skin.py              ← POST /api/skin/analyze
+│   │   ├── recommendations.py   ← POST /api/recommendations
+│   │   ├── products.py          ← GET  /api/products, /api/products/{id}
+│   │   ├── tryon.py             ← POST /api/tryon/generate, /api/tryon/custom
+│   │   ├── glasses.py           ← POST /api/glasses/analyze
+│   │   ├── remedies.py          ← POST /api/remedies/generate
+│   │   └── history.py           ← GET/POST /api/history
+│   │
+│   ├── services/                ← Business Logic
+│   │   ├── youcam.py            ← YouCam API (skin analysis + virtual try-on)
+│   │   ├── claude_ai.py         ← Groq AI service (outfit recs + remedies + glasses)
+│   │   ├── rag_service.py       ← Pinecone vector search + keyword fallback
+│   │   ├── recommendation_service.py ← RAG + Groq ranking pipeline
+│   │   └── storage.py           ← Local history storage
+│   │
+│   └── data/
+│       ├── products.json        ← 50 products catalog
+│       └── style_knowledge.json ← 15 color theory + cultural rules
+│
+├── vercel.json                  ← Frontend deployment (Vercel)
+├── README.md                    ← Developer setup guide
+├── TONEWEAR_PROJECT.md          ← Ye file — full documentation
+└── .gitignore                   ← .env + .venv excluded
 ```
 
 ---
 
-## 6. API Endpoints (Complete)
+## 6. Tech Stack
 
-### Skin Analysis
-```
-POST /api/skin/analyze
-Body: multipart/form-data { image: File }
-Response: {
-  skin_tone, undertone, fitzpatrick, concerns,
-  recommended_colors, color_families,
-  style_directions, avoid_colors
-}
-```
-
-### Personalized Recommendations (RAG — NEW)
-```
-POST /api/recommendations
-Body: {
-  "profile": { skin_tone, undertone, recommended_colors, style_directions },
-  "occasion": "Eid",
-  "budget": 5000,
-  "gender": "Male",
-  "query": "traditional outfit"
-}
-Response: {
-  "products": [
-    { id, name, category, color, price, image_url, product_url,
-      match_score, match_reason, skin_compatibility }
-  ],
-  "style_tips": [...],
-  "color_insight": "..."
-}
-```
-
-### Apparel Virtual Try-On
-```
-POST /api/tryon/generate
-Body: multipart/form-data { person_image, product_id? OR clothing_image? }
-Response: { result_url, processing_time }
-
-POST /api/tryon/custom   ← NEW
-Body: multipart/form-data { person_image, clothing_image }
-Response: { result_url }
-```
-
-### Products
-```
-GET /api/products?category=&occasion=&gender=&min_price=&max_price=
-GET /api/products/{product_id}
-```
-
-### History
-```
-POST /api/history/save
-GET  /api/history/{user_id}
-DELETE /api/history/{user_id}/{session_id}
-```
-
----
-
-## 7. Product Catalog Schema
-
-```json
-{
-  "id": "pk-kurta-navy-001",
-  "name": "Classic Navy Blue Kurta",
-  "category": "Kurta",
-  "culture": "Pakistani",
-  "gender": "Male",
-  "color": "Navy Blue",
-  "color_family": "Blue",
-  "color_hex": "#1a3a5c",
-  "style": ["Modern", "Traditional", "Elegant"],
-  "occasion": ["Eid", "Wedding", "Formal"],
-  "season": ["All"],
-  "skin_tone_compatibility": ["Medium", "Dark", "Light"],
-  "undertone_compatibility": ["warm", "cool", "neutral"],
-  "price": 3500,
-  "currency": "PKR",
-  "image_url": "...",
-  "product_url": "...",
-  "description": "Elegant navy blue kurta..."
-}
-```
-
----
-
-## 8. RAG System Design
-
-### Vector Store
-- Engine: ChromaDB (local, persistent)
-- Collections: `products` + `style_knowledge`
-- Embeddings: sentence-transformers `all-MiniLM-L6-v2`
-
-### Query Construction
-```python
-query_text = f"""
-{occasion} outfit for {gender}.
-Skin tone: {skin_tone}, Undertone: {undertone}.
-Style: {style_directions}.
-Preferred colors: {recommended_colors}.
-Budget under PKR {budget}.
-"""
-```
-
-### RAG Pipeline
-```
-1. User query → build structured query text
-2. ChromaDB similarity search → top 20 candidates
-3. Apply filters (budget, gender, occasion)
-4. Claude API: rank top 5 + generate explanations
-5. Return ranked products with match_score + match_reason
-```
-
----
-
-## 9. Demo Product Catalog Plan (50 Items)
-
-### Pakistani (20 items)
-| Category | Colors | Occasions | Price (PKR) |
-|---|---|---|---|
-| Shalwar Kameez | Navy, Olive, Cream, White, Maroon | Eid, Casual, Friday | 2000–6000 |
-| Kurta | Navy, Deep Green, Burgundy, Grey | Eid, Wedding, Formal | 2500–7000 |
-| Sherwani | Navy, Black, Dark Green, Maroon | Wedding, Eid | 8000–25000 |
-| Waistcoat Set | Navy, Brown, Olive | Formal, Wedding | 4000–9000 |
-
-### Indian (10 items)
-| Category | Colors | Occasions | Price (PKR) |
-|---|---|---|---|
-| Kurta Sets | Deep Blue, Saffron, Green | Festive, Wedding | 3000–8000 |
-| Nehru Jacket | Navy, Black, Maroon | Formal, Wedding | 5000–12000 |
-
-### Middle Eastern (8 items)
-| Category | Colors | Occasions |
+| Layer | Technology | Model/Version |
 |---|---|---|
-| Thobe | White, Cream, Light Grey | Daily, Formal |
-| Bisht | Gold, Black, Navy | Celebrations |
-
-### Western (12 items)
-| Category | Colors | Occasions |
-|---|---|---|
-| Dress Shirts | Navy, Sky Blue, White | Business, Casual |
-| Slim Fit Suit | Charcoal, Navy | Interview, Wedding |
-| Casual Shirts | Olive, Burgundy, Grey | Casual, Date |
-
----
-
-## 10. Main Shopping Page Flow (shop.html)
-
-```
-Step 1: Upload Selfie
-  → Camera or file upload
-  → YouCam Skin AI auto-analyze
-
-Step 2: Style Profile Card
-  → Skin tone + undertone
-  → Best colors (visual swatches)
-  → Style direction tags
-
-Step 3: Search Input
-  → Freeform: "Eid ke liye kuch chahiye, budget 5000"
-  → OR: Occasion picker + Budget slider + Gender toggle
-
-Step 4: RAG Results
-  → 3–6 product cards
-  → Match %, reason, price, image
-
-Step 5: Try On
-  → Click "Try On" → YouCam VTO
-  → Result shown in same page
-
-Step 6: Actions
-  → Compare | Save | View Product
-```
+| Frontend | HTML + Vanilla CSS + Vanilla JS | — |
+| Backend | Python FastAPI | 0.111 |
+| AI Ranking | **Groq** | `llama-3.3-70b-versatile` |
+| Skin Analysis | **YouCam Perfect AI** | Skin AI API |
+| Virtual Try-On | **YouCam Apparel VTO** | Apparel API |
+| Vector Search | **Pinecone** | `llama-text-embed-v2` |
+| Package Mgmt | **uv** | Project-level .venv |
+| Auth | Clerk | — |
+| Frontend Deploy | Vercel | — |
+| Backend Deploy | Railway | — |
 
 ---
 
-## 11. Build Phases
+## 7. Local Development
 
-| Phase | Task |
-|---|---|
-| 1 | Clean UI, establish main ToneWear flow |
-| 2 | Verify YouCam Skin AI |
-| 3 | Normalize results → style profile |
-| 4 | Create 50-item demo catalog |
-| 5 | ChromaDB + embeddings |
-| 6 | RAG recommendation service |
-| 7 | Connect recommendations to Apparel VTO |
-| 8 | Custom clothing try-on |
-| 9 | Save / compare / product actions |
-| 10 | Polish complete demo |
+### Backend start karo:
+```bash
+cd backend
+$env:PYTHONUTF8="1"   # Windows encoding fix
+uv run uvicorn main:app --reload --port 8000
+```
+Backend: `http://localhost:8000`
+API Docs: `http://localhost:8000/docs`
+
+### Frontend start karo:
+```bash
+cd frontend
+python -m http.server 3000
+```
+Frontend: `http://localhost:3000`
+Main Page: `http://localhost:3000/shop.html`
 
 ---
 
-## 12. Demo Story
+## 8. Deployment Steps (Jab Karna Ho)
 
-1. Upload selfie
-2. ToneWear analyzes: *Skin Tone: Medium Warm*
-3. Colors appear: *Navy · Olive · Cream · Deep Green*
-4. User: *"Eid ke liye kuch chahiye, budget 5000 hai"*
-5. RAG: Navy Blue Kurta — **94% Match**, Olive Sherwani — **87% Match**
-6. AI: *"Navy creates elegant contrast with your warm undertone"*
-7. User clicks **Try On** → outfit shown on photo
-8. Compare two options → Save / View Product URL
+### Step 1 — Frontend → Vercel
+1. vercel.com par jao → GitHub se connect karo
+2. `coddies/ToneWear-AI` repo select karo
+3. Root directory: `frontend/` set karo
+4. Deploy karo → URL milegi (e.g. `tonewear-ai.vercel.app`)
 
----
+### Step 2 — YouCam URL Register
+1. yce.makeupar.com/api-console par jao
+2. Apni Vercel URL add karo
+3. YouCam endpoints confirm karo
 
-## 13. Design System
+### Step 3 — Backend → Railway
+1. railway.app par jao → GitHub se connect karo
+2. `backend/` folder select karo
+3. Environment variables add karo (`.env` se copy karo)
+4. Deploy karo → Backend URL milegi
 
-```
-Primary:    #1A56DB
-Secondary:  #7C3AED
-Success:    #059669
-Font:       Inter
-Style:      Glassmorphism (rgba(255,255,255,0.70) + blur(20px))
-Mobile:     Bottom tab bar
-```
-
----
-
-## 14. What Makes ToneWear Different
-
-```
-Personal Skin Analysis
-       +
-AI Style Reasoning (Claude)
-       +
-Real Product Retrieval (RAG / ChromaDB)
-       +
-Virtual Try-On (YouCam)
-       =
-One Complete Shopping Decision Flow
-```
-
-Not just skin AI. Not just VTO. The connection between them.
+### Step 4 — URLs link karo
+- Vercel mein env var add karo: `BACKEND_URL=https://your-railway-url.up.railway.app`
+- Railway mein add karo: `FRONTEND_URL=https://tonewear-ai.vercel.app`
 
 ---
 
-## 15. Environment Variables
+## 9. Main Flow — shop.html
 
-```env
-YOUCAM_API_KEY=
-CLAUDE_API_KEY=
-CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-BACKEND_URL=http://localhost:8000
-CHROMA_PERSIST_DIR=./vectorstore
+```
+1. Selfie Upload
+   ↓
+2. POST /api/skin/analyze
+   → YouCam: skin tone, undertone, fitzpatrick, concerns
+   → Groq: outfit type recommendations
+   ↓
+3. Personal Color Profile
+   (skin_tone, undertone, recommended_colors, style_directions)
+   ↓
+4. User types request: "Eid ke liye kurta, budget 5000"
+   ↓
+5. POST /api/recommendations
+   → Pinecone: vector search (query + profile)
+   → Groq llama-3.3-70b: rank top 6 + match_reason
+   ↓
+6. 6 Personalized Products (with % match + AI explanation)
+   ↓
+7. Click "Try On"
+   → POST /api/tryon/generate
+   → YouCam VTO: returns result image URL
+   ↓
+8. Before/After comparison slider
+   ↓
+9. Save / View Product / Buy
 ```
 
 ---
 
-*Version 2.0 — Final MVP Plan | 2026-08-10*
+## 10. GitHub
+
+**Repo:** https://github.com/coddies/ToneWear-AI
+
+```bash
+# Naya code push karna ho:
+& "C:\Program Files\Git\cmd\git.exe" add .
+& "C:\Program Files\Git\cmd\git.exe" commit -m "your message"
+& "C:\Program Files\Git\cmd\git.exe" remote set-url origin https://TOKEN@github.com/coddies/ToneWear-AI.git
+& "C:\Program Files\Git\cmd\git.exe" push origin main
+& "C:\Program Files\Git\cmd\git.exe" remote set-url origin https://github.com/coddies/ToneWear-AI.git
+```

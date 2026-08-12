@@ -45,7 +45,7 @@ async def generate_tryon(
         raise HTTPException(400, str(e))
     except Exception as e:
         # Demo mode: return a placeholder
-        return TryOnResponse(result_url="/static/demo-tryon.jpg")
+        return TryOnResponse(result_url="https://images.unsplash.com/photo-1594938298603-c8148c4b4a0e?w=800")
 
 
 # ── Custom Try-On (User's Own Clothes) ───────────────────────────────────────
@@ -70,4 +70,4 @@ async def custom_tryon(
     except ValueError as e:
         raise HTTPException(400, str(e))
     except Exception as e:
-        return TryOnResponse(result_url="/static/demo-tryon.jpg")
+        return TryOnResponse(result_url="https://images.unsplash.com/photo-1594938298603-c8148c4b4a0e?w=800")

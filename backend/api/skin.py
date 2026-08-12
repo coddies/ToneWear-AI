@@ -20,8 +20,8 @@ router = APIRouter()
 @router.post("/analyze", response_model=SkinAnalysisResponse)
 async def analyze_skin(
     image: UploadFile = File(..., description="Selfie image (JPG/PNG/WEBP, max 10MB)"),
-    occasion: str = Form(..., description="Occasion e.g. Eid, Wedding, Casual"),
-    style_preference: str = Form("[]", description="JSON array of style preferences")
+    occasion: Optional[str] = Form("Casual", description="Occasion e.g. Eid, Wedding, Casual"),
+    style_preference: Optional[str] = Form("[]", description="JSON array of style preferences")
 ):
     """
     Analyze skin tone, concerns, and generate outfit recommendations.

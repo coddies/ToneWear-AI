@@ -80,9 +80,9 @@ async def glasses_tryon(
 
     try:
         result = await youcam_service.glasses_tryon(face_bytes, frame_image_url)
-        return TryOnResponse(result_url=result.get("result_url", "/static/demo-glasses.jpg"))
+        return TryOnResponse(result_url=result.get("result_url", "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=800"))
     except Exception:
-        return TryOnResponse(result_url="/static/demo-glasses.jpg")
+        return TryOnResponse(result_url="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=800")
 
 
 # ── Face Shape Descriptions ───────────────────────────────────────────────────

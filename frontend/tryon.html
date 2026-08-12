@@ -3,169 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Virtual Try-On — ToneWear AI</title>
-  <meta name="description" content="Virtually try on outfits recommended by AI based on your skin tone. Before/after comparison with download.">
+  <title>Virtual Try-On Studio — ToneWear AI</title>
+  <meta name="description" content="Virtually try on outfits recommended by AI.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/animations.css">
   <style>
-    .tryon-layout {
+    .tryon-main-layout {
       display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 24px;
+      grid-template-columns: 340px 1fr;
+      gap: var(--sp-8);
       align-items: start;
     }
 
-    /* ── Outfit Selector Panel ───────────────────── */
-    .outfit-selector {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-glass);
-      border-radius: 20px;
-      box-shadow: var(--shadow-glass);
-      overflow: hidden;
+    .outfit-sidebar {
       position: sticky;
-      top: calc(var(--topbar-h) + 16px);
-      max-height: calc(100vh - var(--topbar-h) - 80px);
+      top: calc(var(--navbar-h) + var(--sp-4));
+      max-height: calc(100vh - var(--navbar-h) - 40px);
+      overflow-y: auto;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-default);
+      padding: var(--sp-4);
       display: flex;
       flex-direction: column;
+      gap: var(--sp-4);
+      scrollbar-width: none;
+    }
+    .outfit-sidebar::-webkit-scrollbar { display: none; }
+
+    .preview-panel {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-default);
+      padding: var(--sp-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-6);
     }
 
-    .outfit-selector-header {
-      padding: 20px 20px 0;
-      flex-shrink: 0;
+    /* Tabs Styling */
+    .tabs-underline {
+      display: flex;
+      gap: var(--sp-6);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: var(--sp-6);
     }
 
-    .category-pills {
+    .tab-underline-btn {
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: var(--sp-3) 0;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      transition: all var(--t-fast);
+      cursor: pointer;
+    }
+
+    .tab-underline-btn.active {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .tab-panel.hidden {
+      display: none !important;
+    }
+
+    /* Outfits selector */
+    .mini-category-filters {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding: 12px 20px;
-      flex-shrink: 0;
       scrollbar-width: none;
+      padding-bottom: 4px;
     }
-    .category-pills::-webkit-scrollbar { display: none; }
-
-    .category-pill {
-      padding: 6px 14px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 600;
-      border: 1.5px solid var(--border-default);
-      background: transparent;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all var(--t-fast);
-      color: var(--text-secondary);
-    }
-
-    .category-pill:hover, .category-pill.active {
-      background: var(--gradient);
-      color: #fff;
-      border-color: transparent;
-    }
-
-    .outfit-grid-scroll {
-      overflow-y: auto;
-      padding: 0 20px 20px;
-      flex: 1;
-    }
-
-    .outfit-mini-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+    .mini-category-filters::-webkit-scrollbar { display: none; }
 
     .outfit-card {
-      border: 2px solid var(--border-default);
-      border-radius: 12px;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-default);
       overflow: hidden;
       cursor: pointer;
-      transition: all var(--t-spring);
-      background: var(--bg-card);
+      background-color: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      transition: all var(--t-fast);
       position: relative;
     }
 
-    .outfit-card:hover { border-color: var(--primary); transform: scale(1.02); }
-
-    .outfit-card.selected {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(26,86,219,0.18);
-      transform: scale(1.03);
+    .outfit-card:hover {
+      border-color: var(--text-primary);
+      transform: translateY(-2px);
     }
 
-    .outfit-card-img {
-      height: 90px;
+    .outfit-card.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+
+    .outfit-card-image {
+      aspect-ratio: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
-    }
-
-    .outfit-card-info {
-      padding: 8px;
-      border-top: 1px solid var(--border-subtle);
-    }
-
-    .outfit-card-name { font-size: 11px; font-weight: 600; }
-    .outfit-card-cat  { font-size: 10px; color: var(--text-muted); }
-
-    .rec-star { position: absolute; top: 4px; right: 4px; font-size: 12px; }
-
-    /* ── Right Panel ─────────────────────────────── */
-    .result-panel {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-glass);
-      border-radius: 20px;
-      box-shadow: var(--shadow-glass);
-      padding: 28px;
-    }
-
-    .user-photo-upload-zone {
-      border: 2.5px dashed var(--border-default);
-      border-radius: 14px;
-      padding: 40px 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all var(--t-base);
-      background: rgba(26,86,219,0.02);
+      background-color: var(--primary-light);
       position: relative;
     }
 
-    .user-photo-upload-zone:hover,
-    .user-photo-upload-zone.drag-over {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .user-photo-upload-zone input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
-    .user-photo-preview-wrap { display: none; }
-    .user-photo-preview-wrap img {
-      width: 100%;
-      max-height: 240px;
-      object-fit: cover;
-      border-radius: 12px;
-    }
-
-    /* ── Before/After Slider ─────────────────────── */
+    /* Before/After Container inside results */
     .before-after-container {
       position: relative;
-      border-radius: 16px;
+      aspect-ratio: 3/4;
+      border-radius: var(--radius-default);
       overflow: hidden;
-      cursor: ew-resize;
-      background: #1a1a2e;
-      min-height: 400px;
-      user-select: none;
+      background-color: var(--primary-light);
+      border: 1px solid var(--border-default);
     }
 
     .ba-side {
@@ -178,333 +133,349 @@
       justify-content: center;
     }
 
-    .ba-before { background: linear-gradient(135deg,#EBF2FF,#EDE9FF); }
-    .ba-after  { background: linear-gradient(135deg,#1a3a5c22,#7C3AED22); clip-path: inset(0 50% 0 0); }
+    .ba-before {
+      z-index: 1;
+    }
+
+    .ba-after {
+      z-index: 2;
+      clip-path: inset(0 50% 0 0); /* will be updated dynamically by js */
+    }
 
     .ba-label {
       position: absolute;
       bottom: 12px;
-      background: rgba(0,0,0,0.5);
-      color: #fff;
-      font-size: 12px;
+      background-color: rgba(28,28,28,0.8);
+      color: #FFFFFF;
+      font-size: 10px;
       font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 50px;
-      backdrop-filter: blur(4px);
+      padding: 4px 8px;
+      border-radius: var(--radius-default);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .ba-label-before { left: 12px; }
-    .ba-label-after  { right: 12px; }
+    .ba-label-after { right: 12px; }
 
     .ba-handle {
       position: absolute;
-      top: 0; bottom: 0;
+      top: 0;
+      bottom: 0;
       left: 50%;
-      width: 3px;
-      background: #fff;
+      width: 2px;
+      background-color: #FFFFFF;
+      z-index: 3;
       transform: translateX(-50%);
-      z-index: 2;
-      cursor: ew-resize;
     }
 
     .ba-handle-btn {
       position: absolute;
-      top: 50%; left: 50%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      width: 44px; height: 44px;
-      background: #fff;
+      width: 32px;
+      height: 32px;
+      background-color: #FFFFFF;
+      border: 1px solid var(--border-default);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      color: var(--primary);
+      font-size: 14px;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
     }
 
-    /* ── Result Empty State ──────────────────────── */
-    .result-empty {
-      min-height: 400px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    /* ── Two-Zone Upload (Tab 2) ─────────────────── */
-    .dual-upload {
+    /* Dual upload for custom clothes */
+    .dual-upload-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
+      gap: var(--sp-6);
+      margin-bottom: var(--sp-6);
     }
 
-    .upload-mini-zone {
-      border: 2px dashed var(--border-default);
-      border-radius: 14px;
-      padding: 32px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all var(--t-base);
-      position: relative;
-      background: rgba(26,86,219,0.02);
+    .custom-preview-thumbnail {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: var(--radius-default);
+      border: 1px solid var(--border-default);
     }
 
-    .upload-mini-zone:hover { border-color: var(--primary); background: var(--primary-light); }
-    .upload-mini-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-
-    /* ── Responsive ─────────────────────────────── */
     @media (max-width: 1023px) {
-      .tryon-layout { grid-template-columns: 1fr; }
-      .outfit-selector { position: static; max-height: none; }
+      .tryon-main-layout {
+        grid-template-columns: 1fr;
+      }
+      .outfit-sidebar {
+        position: static;
+        max-height: none;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="sidebar-overlay" id="sidebar-overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none';"></div>
-
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-  <a href="index.html" class="sidebar-logo">
-    <div class="sidebar-logo-icon">✨</div>
-    <span class="sidebar-logo-text">ToneWear AI</span>
-  </a>
-  <nav class="sidebar-nav">
-    <span class="nav-section-label">Main Menu</span>
-    <a href="index.html"    class="nav-item" data-page="index.html">    <span class="nav-item-icon">🏠</span> Home </a>
-    <a href="analyzer.html" class="nav-item" data-page="analyzer.html"><span class="nav-item-icon">🔬</span> Skin Analyzer </a>
-    <a href="tryon.html"    class="nav-item active" data-page="tryon.html"><span class="nav-item-icon">👕</span> Virtual Try-On </a>
-    <a href="glasses.html"  class="nav-item" data-page="glasses.html">  <span class="nav-item-icon">👓</span> Glasses Try-On </a>
-    <a href="remedies.html" class="nav-item" data-page="remedies.html"> <span class="nav-item-icon">🌿</span> Skin Remedies </a>
-    <span class="nav-section-label" style="margin-top:8px">Account</span>
-    <a href="history.html"  class="nav-item" data-page="history.html">  <span class="nav-item-icon">📋</span> My History </a>
-    <a href="#"             class="nav-item">                            <span class="nav-item-icon">⚙️</span> Settings </a>
+<div class="app-shell">
+  <!-- ══════════════════════════════════════════════
+       GLOBAL NAVBAR
+       ══════════════════════════════════════════════ -->
+  <nav class="tw-navbar">
+    <a href="index.html" class="tw-navbar-brand">
+      <span class="tw-navbar-brand-icon">✨</span>
+      <span>ToneWear AI</span>
+    </a>
+    
+    <div class="tw-navbar-links">
+      <a href="shop.html" class="tw-navbar-link">Shop</a>
+      <a href="shop.html?stylist=true" class="tw-navbar-link">AI Stylist</a>
+      <a href="analyzer.html" class="tw-navbar-link">Skin Analysis</a>
+      <a href="tryon.html" class="tw-navbar-link active">Virtual Try-On</a>
+      <a href="glasses.html" class="tw-navbar-link">Glasses</a>
+      <a href="history.html" class="tw-navbar-link">My Looks</a>
+    </div>
+    
+    <div class="tw-navbar-actions">
+      <a href="shop.html" class="tw-navbar-btn" title="Search">🔍</a>
+      <a href="history.html" class="tw-navbar-btn" title="Saved Looks">🖤</a>
+      <div class="tw-navbar-profile" onclick="window.location.href='login.html'">
+        <div class="tw-navbar-avatar" id="navbar-avatar">U</div>
+      </div>
+    </div>
   </nav>
-  <div class="sidebar-footer">
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" id="sidebar-avatar">U</div>
-      <div class="sidebar-user-info">
-        <div class="sidebar-user-name"  id="sidebar-user-name">User</div>
-        <div class="sidebar-user-email" id="sidebar-user-email"></div>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN CONTENT
+       ══════════════════════════════════════════════ -->
+  <main class="main-content">
+    <div class="page-container">
+      
+      <!-- Tabs underline -->
+      <div class="tabs-underline">
+        <button class="tab-underline-btn active" data-tab="recommended">👔 Try Recommended</button>
+        <button class="tab-underline-btn" data-tab="custom">📤 Custom Try-On</button>
+        <button class="tab-underline-btn" data-tab="glasses">👓 Eyewear Try-On</button>
       </div>
-      <button class="sidebar-logout-btn" id="logout-btn">⏻</button>
-    </div>
-  </div>
-</aside>
 
-<!-- Main Content -->
-<div class="main-content">
-  <div class="topbar">
-    <button class="topbar-menu-btn" id="menu-btn">☰</button>
-    <div class="topbar-title">👕 Virtual Try-On</div>
-    <div class="topbar-actions">
-      <button id="theme-toggle" class="btn btn-ghost btn-icon"><span id="theme-icon">🌙</span></button>
-    </div>
-  </div>
+      <!-- TAB 1: Recommended outfits VTO -->
+      <div class="tab-panel" data-tab-panel="recommended">
+        <div class="tryon-main-layout">
+          
+          <!-- Left: Outfit Selector Sidebar -->
+          <div class="outfit-sidebar">
+            <div>
+              <span class="editorial-step-num uppercase">Step 1</span>
+              <h3 class="font-semibold text-sm mt-1 uppercase tracking-widest">Select Outfit</h3>
+            </div>
 
-  <div class="page-container">
+            <!-- Mini category chips -->
+            <div class="mini-category-filters">
+              <button class="filter-chip active" data-category="All">All</button>
+              <button class="filter-chip" data-category="Shalwar Kameez">Shalwar Kameez</button>
+              <button class="filter-chip" data-category="Kurta">Kurta</button>
+              <button class="filter-chip" data-category="Sherwani">Sherwani</button>
+              <button class="filter-chip" data-category="Western">Western</button>
+              <button class="filter-chip" data-category="Thobe">Thobe</button>
+            </div>
 
-    <!-- Tabs -->
-    <div class="tabs-underline mb-8" style="margin-top:-8px">
-      <button class="tab-underline-btn active" data-tab="recommended">👔 Try Outfits</button>
-      <button class="tab-underline-btn" data-tab="custom">📤 Your Own Clothes</button>
-      <button class="tab-underline-btn" data-tab="glasses" onclick="window.location.href='glasses.html'">👓 Try Glasses ↗</button>
-    </div>
-
-    <!-- TAB 1: Try Recommended Outfits -->
-    <div class="tab-panel" data-tab-panel="recommended">
-      <div class="tryon-layout">
-
-        <!-- Left: Outfit Selector -->
-        <div class="outfit-selector">
-          <div class="outfit-selector-header">
-            <h3 class="font-bold mb-1">Select an Outfit</h3>
-            <p class="text-sm text-muted">Click to choose, then generate</p>
-          </div>
-
-          <div class="category-pills">
-            <button class="category-pill active" data-category="All">All</button>
-            <button class="category-pill" data-category="Shalwar Kameez">Shalwar Kameez</button>
-            <button class="category-pill" data-category="Kurta">Kurta</button>
-            <button class="category-pill" data-category="Sherwani">Sherwani</button>
-            <button class="category-pill" data-category="Western">Western</button>
-            <button class="category-pill" data-category="Thobe">Thobe</button>
-          </div>
-
-          <div class="outfit-grid-scroll">
-            <div class="outfit-mini-grid" id="outfit-grid">
-              <!-- Populated by tryon.js -->
+            <!-- Mini outfits list -->
+            <div class="grid grid-2 gap-2" id="outfit-grid">
+              <!-- Rendered dynamically by tryon.js -->
             </div>
           </div>
-        </div>
 
-        <!-- Right: Upload + Result -->
-        <div class="result-panel">
-          <h3 class="font-bold mb-5" style="font-size:18px">Your Try-On Preview</h3>
-
-          <!-- User Photo Upload — Universal Zone -->
-          <div id="user-photo-section" class="mb-6">
-            <div class="upload-zone-universal" id="user-photo-zone"
-                 ondragover="event.preventDefault();this.classList.add('drag-over')"
-                 ondragleave="this.classList.remove('drag-over')"
-                 ondrop="handleTryonDrop(event)">
-
-              <input type="file" id="user-photo-input" accept="image/jpeg,image/png,image/webp"
-                     style="display:none" onchange="handleTryonFileChange(event)">
-
-              <div id="tryon-uz-default">
-                <span class="uz-icon">🤳</span>
-                <div class="uz-title">Drop your photo here</div>
-                <div class="uz-subtitle">Drag &amp; drop or click to browse — JPG, PNG, WEBP (max 10MB)</div>
-                <div class="uz-buttons">
-                  <button class="btn btn-primary"
-                          onclick="event.stopPropagation();document.getElementById('user-photo-input').click()">
-                    📁 Browse Files
-                  </button>
-                  <button class="btn btn-secondary"
-                          onclick="event.stopPropagation();App.openCamera(handleTryonPhoto)">
-                    📷 Use Camera
-                  </button>
+          <!-- Right: Upload selfie + Generate + Render result -->
+          <div class="preview-panel">
+            
+            <!-- Target Selfie Zone -->
+            <div id="user-photo-section">
+              <div class="editorial-step-num uppercase mb-2">Step 2 / Portrait Upload</div>
+              
+              <div class="upload-zone-universal" id="user-photo-zone">
+                <input type="file" id="user-photo-input" accept="image/jpeg,image/png,image/webp" style="display:none">
+                
+                <div id="tryon-uz-default">
+                  <span class="upload-zone-icon">🤳</span>
+                  <div class="font-semibold text-sm mt-2">Upload your front portrait</div>
+                  <p class="text-xs text-muted mt-1 mb-4">Select or drag photo (max 10MB)</p>
+                  
+                  <div class="flex gap-2 justify-center" onclick="event.stopPropagation()">
+                    <button class="btn btn-primary" onclick="document.getElementById('user-photo-input').click()">Browse Files</button>
+                    <button class="btn btn-secondary" onclick="App.openCamera(handleTryonPhoto)">Open Camera</button>
+                  </div>
                 </div>
-                <div class="uz-tip">💡 Best results: Front-facing, good lighting</div>
-              </div>
 
-              <div id="tryon-uz-preview" class="uz-preview-state hidden">
-                <img id="user-photo-preview" class="uz-preview-img" src="" alt="Your photo">
-                <button class="uz-change-btn"
-                        onclick="event.stopPropagation();resetTryonPhoto()">
-                  🔄 Change Photo
-                </button>
-              </div>
-
-            </div>
-
-
-
-          <!-- Generate Button -->
-          <button class="btn btn-primary btn-full btn-lg mb-6" id="generate-btn" disabled>
-            ✨ Generate Try-On
-          </button>
-
-          <!-- Result: Loading -->
-          <div id="result-loading" class="hidden" style="text-align:center;padding:60px 0">
-            <div class="spinner-ring-lg animate-spin mx-auto mb-5"></div>
-            <div class="font-semibold mb-2">Generating your look...</div>
-            <div class="text-sm text-muted">This takes about 10 seconds ✨</div>
-          </div>
-
-          <!-- Result: Empty -->
-          <div class="result-empty" id="result-empty">
-            <span style="font-size:64px;opacity:0.3">👔</span>
-            <div class="font-semibold">Select an outfit & upload photo</div>
-            <div class="text-sm">Your virtual try-on will appear here</div>
-          </div>
-
-          <!-- Result: Before/After -->
-          <div id="tryon-result" class="hidden">
-            <div class="before-after-container" id="before-after-container">
-              <div class="ba-side ba-before" id="before-image">
-                <span style="font-size:64px;opacity:0.4">🤳</span>
-                <span class="ba-label ba-label-before">Before</span>
-              </div>
-              <div class="ba-side ba-after" id="after-image">
-                <span class="ba-label ba-label-after">After</span>
-              </div>
-              <div class="ba-handle" id="ba-handle">
-                <div class="ba-handle-btn">⇔</div>
+                <div id="tryon-uz-preview" class="hidden flex flex-col items-center gap-4">
+                  <img id="user-photo-preview" src="" alt="Portrait Source" style="width:120px;height:120px;object-fit:cover;border-radius:var(--radius-default);border:1px solid var(--border-default);">
+                  <button class="btn btn-secondary" onclick="event.stopPropagation();resetTryonPhoto()">Change Portrait</button>
+                </div>
               </div>
             </div>
 
-            <!-- Actions -->
-            <div id="result-actions" class="hidden mt-5 flex gap-3 flex-wrap">
-              <button id="download-result-btn" class="btn btn-primary flex-1">⬇ Download</button>
-              <button class="btn btn-secondary flex-1" onclick="App.showToast('Copied!','Share link copied to clipboard','success')">📤 Share</button>
-              <button class="btn btn-ghost" onclick="document.getElementById('tryon-result').classList.add('hidden');document.getElementById('result-empty').classList.remove('hidden');">🔄 Try Another</button>
+            <!-- Action generate button -->
+            <button class="btn btn-primary w-full text-center mt-2" id="generate-btn" disabled>Generate Try-On</button>
+
+            <!-- Loading rendering state -->
+            <div id="result-loading" class="hidden text-center py-12 flex flex-col items-center justify-center gap-2">
+              <span class="upload-zone-icon animate-spin">⏳</span>
+              <div class="font-semibold text-sm">Rendering outfit layer...</div>
+              <p class="text-xs text-muted">This takes around 8 seconds.</p>
+            </div>
+
+            <!-- Empty State -->
+            <div class="fashion-card p-12 text-center flex flex-col items-center justify-center gap-2" id="result-empty">
+              <span style="font-size:40px;opacity:0.3;">👔</span>
+              <h3 class="editorial-title" style="font-size:18px;">Select an outfit to begin</h3>
+              <p class="text-xs text-muted">Your interactive before/after projection will render here.</p>
+            </div>
+
+            <!-- Result: Before / After Slider -->
+            <div id="tryon-result" class="hidden">
+              <h4 class="font-semibold text-xs uppercase tracking-widest mb-4">Projected VTO Result</h4>
+              
+              <div class="before-after-container" id="before-after-container">
+                <div class="ba-side ba-before" id="before-image">
+                  <span class="ba-label ba-label-before">Before</span>
+                </div>
+                <div class="ba-side ba-after" id="after-image">
+                  <span class="ba-label ba-label-after">After</span>
+                </div>
+                <div class="ba-handle" id="ba-handle">
+                  <div class="ba-handle-btn">↔</div>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div id="result-actions" class="hidden mt-6 flex gap-3">
+                <button id="download-result-btn" class="btn btn-primary flex-1">Download Look</button>
+                <button class="btn btn-secondary flex-1" onclick="App.showToast('Copied!','Share link copied to clipboard','success')">Share Look</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('tryon-result').classList.add('hidden');document.getElementById('result-empty').classList.remove('hidden');">Clear</button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB 2: Custom Try-On -->
+      <div class="tab-panel hidden" data-tab-panel="custom">
+        <div class="preview-panel" style="max-width:800px;margin:0 auto;">
+          <div>
+            <span class="editorial-step-num uppercase">Custom Apparel</span>
+            <h2 class="editorial-title mt-1" style="font-size:24px;">Try Your Own Clothes</h2>
+            <p class="text-xs text-muted mt-1">Upload a photo of yourself along with the clothing item image to project it instantly.</p>
+          </div>
+
+          <div class="dual-upload-grid">
+            
+            <!-- User photo -->
+            <div class="upload-zone-universal">
+              <input type="file" id="custom-user-input" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handleCustomUserUpload(this)">
+              <span class="upload-zone-icon">🤳</span>
+              <div class="font-semibold text-xs mt-2">Your Portrait</div>
+              <button class="btn btn-secondary mt-2" style="font-size:10px;padding:6px 12px;" onclick="document.getElementById('custom-user-input').click()">Browse</button>
+            </div>
+
+            <!-- Apparel photo -->
+            <div class="upload-zone-universal">
+              <input type="file" id="clothing-input" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handleClothingUpload(this)">
+              <span class="upload-zone-icon">👔</span>
+              <div class="font-semibold text-xs mt-2">Apparel Image</div>
+              <button class="btn btn-secondary mt-2" style="font-size:10px;padding:6px 12px;" onclick="document.getElementById('clothing-input').click()">Browse</button>
+            </div>
+
+          </div>
+
+          <!-- Previews -->
+          <div id="custom-preview-row" class="fashion-card p-4 flex gap-6 justify-center items-center" style="display:none;">
+            <div class="flex items-center gap-3">
+              <img id="custom-user-thumb" class="custom-preview-thumbnail" src="" alt="User thumbnail">
+              <span class="text-xs font-semibold uppercase">Your Face</span>
+            </div>
+            <span style="font-size:16px;">➕</span>
+            <div class="flex items-center gap-3">
+              <img id="custom-cloth-thumb" class="custom-preview-thumbnail" src="" alt="Clothing thumbnail">
+              <span class="text-xs font-semibold uppercase">Apparel</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-full text-center" id="custom-generate-btn" disabled onclick="generateCustomTryOn()">Generate Custom Look</button>
+
+          <!-- Loading -->
+          <div id="custom-loading" class="hidden text-center py-12 flex flex-col items-center justify-center gap-2">
+            <span class="upload-zone-icon animate-spin">⏳</span>
+            <div class="font-semibold text-sm">Stitching clothing pattern...</div>
+            <p class="text-xs text-muted">This takes around 8 seconds.</p>
+          </div>
+
+          <!-- Empty State -->
+          <div class="fashion-card p-12 text-center flex flex-col items-center justify-center gap-2" id="custom-empty">
+            <span style="font-size:40px;opacity:0.3;">👚</span>
+            <h3 class="editorial-title" style="font-size:18px;">Upload photos to begin</h3>
+            <p class="text-xs text-muted">Both your portrait and clothing flat-lay images are required.</p>
+          </div>
+
+          <!-- Custom Result Render -->
+          <div id="custom-result" class="hidden">
+            <h4 class="font-semibold text-xs uppercase tracking-widest mb-4">Generated Custom VTO Result</h4>
+            
+            <div class="grid grid-2 gap-4">
+              <div class="tryon-image-box">
+                <img id="custom-selfie-result" src="" alt="Original Selfie">
+                <span class="tryon-label">Before</span>
+              </div>
+              <div class="tryon-image-box">
+                <img id="custom-tryon-result" src="" alt="Custom Try-On Result">
+                <span class="tryon-label">After</span>
+              </div>
+            </div>
+
+            <!-- Guidance block -->
+            <div class="ai-reason-bubble mt-4" id="custom-ai-guidance" style="display:none;">
+              <span class="font-bold text-xs uppercase tracking-wider block mb-1">AI Styling Guidance</span>
+              <p class="text-xs" id="custom-guidance-text"></p>
+            </div>
+
+            <div class="flex gap-3 mt-6">
+              <button class="btn btn-primary flex-1" onclick="downloadCustomResult()">Download Result</button>
+              <button class="btn btn-secondary flex-1" onclick="resetCustomTryOn()">Try Another</button>
             </div>
           </div>
 
         </div>
       </div>
+
     </div>
-
-    <!-- TAB 2: Your Own Clothes -->
-    <div class="tab-panel hidden" data-tab-panel="custom">
-      <div class="result-panel">
-        <h3 class="font-bold mb-2" style="font-size:20px">📤 Try Your Own Clothes</h3>
-        <p class="text-muted mb-6">Upload your photo + a photo of your clothing item to see how it looks on you</p>
-
-        <div class="dual-upload">
-          <div class="upload-mini-zone">
-            <input type="file" id="custom-user-input" accept="image/jpeg,image/png,image/webp" onchange="handleCustomUserUpload(this)">
-            <div style="font-size:32px;margin-bottom:8px">🤳</div>
-            <div class="font-semibold text-sm mb-1">Your Photo</div>
-            <div class="text-xs text-muted mb-3">Front-facing selfie</div>
-            <label for="custom-user-input" class="btn btn-secondary btn-sm">Browse</label>
-          </div>
-          <div class="upload-mini-zone">
-            <input type="file" id="clothing-input" accept="image/jpeg,image/png,image/webp" onchange="handleClothingUpload(this)">
-            <div style="font-size:32px;margin-bottom:8px">👔</div>
-            <div class="font-semibold text-sm mb-1">Your Clothing</div>
-            <div class="text-xs text-muted mb-3">Shirt, kameez, kurta photo</div>
-            <label for="clothing-input" class="btn btn-secondary btn-sm">Browse</label>
-          </div>
-        </div>
-
-        <!-- Preview Row -->
-        <div id="custom-preview-row" style="display:none;gap:16px;margin:16px 0;">
-          <div style="flex:1;min-width:120px;text-align:center;">
-            <img id="custom-user-thumb" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(26,86,219,0.25);" src="" alt="">
-            <div style="font-size:12px;color:var(--text-muted);margin-top:6px;">Your Photo</div>
-          </div>
-          <div style="flex:1;min-width:120px;text-align:center;">
-            <img id="custom-cloth-thumb" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:3px solid rgba(124,58,237,0.25);" src="" alt="">
-            <div style="font-size:12px;color:var(--text-muted);margin-top:6px;">Your Clothing</div>
-          </div>
-        </div>
-
-        <button class="btn btn-primary btn-full btn-lg mb-6" id="custom-generate-btn" disabled onclick="generateCustomTryOn()">
-          ✨ Generate My Look
-        </button>
-
-        <!-- Loading -->
-        <div id="custom-loading" class="hidden" style="text-align:center;padding:40px 0;">
-          <div class="spinner-ring-lg animate-spin mx-auto mb-4"></div>
-          <div class="font-semibold mb-2">Creating your look...</div>
-          <div class="text-sm text-muted">This may take a few seconds</div>
-        </div>
-
-        <!-- Empty State -->
-        <div class="result-empty" id="custom-empty">
-          <span style="font-size:64px;opacity:0.3">👔</span>
-          <div class="font-semibold">Upload both images to get started</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  </main>
 </div>
 
-<!-- Bottom Nav -->
-<nav class="bottom-nav">
-  <div class="bottom-nav-inner">
-    <a href="index.html"    class="bottom-nav-item" data-page="index.html">    <span class="nav-icon">🏠</span>Home</a>
-    <a href="analyzer.html" class="bottom-nav-item" data-page="analyzer.html"><span class="nav-icon">🔬</span>Analyze</a>
-    <a href="tryon.html"    class="bottom-nav-item active" data-page="tryon.html"><span class="nav-icon">👕</span>Try-On</a>
-    <a href="glasses.html"  class="bottom-nav-item" data-page="glasses.html">  <span class="nav-icon">👓</span>Glasses</a>
-    <a href="remedies.html" class="bottom-nav-item" data-page="remedies.html"> <span class="nav-icon">🌿</span>Remedies</a>
-  </div>
+<!-- Mobile Bottom Nav -->
+<nav class="mobile-nav-bar">
+  <a href="shop.html" class="mobile-nav-item">
+    <span class="mobile-nav-icon">🛍️</span>
+    <span>Shop</span>
+  </a>
+  <a href="analyzer.html" class="mobile-nav-item">
+    <span class="mobile-nav-icon">🔬</span>
+    <span>Analyze</span>
+  </a>
+  <a href="tryon.html" class="mobile-nav-item active">
+    <span class="mobile-nav-icon">👕</span>
+    <span>Try-On</span>
+  </a>
+  <a href="history.html" class="mobile-nav-item">
+    <span class="mobile-nav-icon">📋</span>
+    <span>My Looks</span>
+  </a>
 </nav>
 
 <script src="js/app.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="js/tryon.js"></script>
+
 <script>
-  // ── Standard Try-On (Tab 1) ───────────────────────────────────
   function handleTryonFileChange(e) {
     const file = e.target.files[0];
     if (file) handleTryonPhoto(file);
@@ -530,16 +501,19 @@
       if (img) img.src = ev.target.result;
       document.getElementById('tryon-uz-default').classList.add('hidden');
       document.getElementById('tryon-uz-preview').classList.remove('hidden');
-      if (typeof userImageFile !== 'undefined') userImageFile = file;
+      
+      // Set globals so tryon.js is aware
+      userImageFile = file;
+
       const generateBtn = document.getElementById('generate-btn');
-      const selectedOutfit = document.querySelector('.outfit-card.selected');
+      const selectedOutfitCard = document.querySelector('.outfit-card.selected');
       if (generateBtn && selectedOutfit) generateBtn.disabled = false;
     };
     reader.readAsDataURL(file);
   }
 
   function resetTryonPhoto() {
-    if (typeof userImageFile !== 'undefined') userImageFile = null;
+    userImageFile = null;
     document.getElementById('user-photo-input').value = '';
     document.getElementById('tryon-uz-default').classList.remove('hidden');
     document.getElementById('tryon-uz-preview').classList.add('hidden');
@@ -547,9 +521,7 @@
     if (generateBtn) generateBtn.disabled = true;
   }
 
-  function resetUserPhoto() { resetTryonPhoto(); }
-
-  // ── Custom Try-On (Tab 2) ─────────────────────────────────────
+  // Custom clothes
   let _customUserFile    = null;
   let _customClothFile   = null;
   let _customUserDataURL = null;
@@ -558,6 +530,8 @@
     const file = input.files[0];
     if (!file) return;
     _customUserFile = file;
+    // Set global userImageFile so API functions can leverage it
+    userImageFile = file;
     const reader = new FileReader();
     reader.onload = ev => {
       _customUserDataURL = ev.target.result;
@@ -614,16 +588,12 @@
         const data = await res.json();
         showCustomResult(data.result_url || data.result_image_url || '');
       } else {
-        // Demo mode: show the two images side by side
         showCustomResult('', true);
       }
-
     } catch (e) {
       document.getElementById('custom-loading').classList.add('hidden');
-      // Demo mode fallback
       showCustomResult('', true);
     }
-
     btn.disabled = false;
   }
 
@@ -632,19 +602,17 @@
 
     const resultImg = document.getElementById('custom-tryon-result');
     if (demoMode || !resultUrl) {
-      // Show clothing image as demo result
       resultImg.src = document.getElementById('custom-cloth-thumb').src;
     } else {
       resultImg.src = resultUrl;
     }
 
-    // Show AI guidance
     const guidance = document.getElementById('custom-ai-guidance');
     const guidanceText = document.getElementById('custom-guidance-text');
     guidance.style.display = 'block';
     guidanceText.textContent = demoMode
-      ? 'Demo mode: Your clothing is shown for preview. Connect YouCam API to see full virtual try-on. For best results, take a front-facing photo in good lighting with the clothing laid flat on a white background.'
-      : 'Your try-on has been generated! This outfit has been virtually placed on your photo using AI. For a better result, try a photo with clear front lighting and a simple background.';
+      ? 'Demo mode active. Connect the backend with valid YouCam API credentials to generate virtual try-ons. Tip: Capture portrait in neutral lighting with flat-lay clothing against solid contrast backgrounds.'
+      : 'Apparel projection completed. The custom flat-lay pattern has been successfully blended onto your source selfie canvas.';
 
     document.getElementById('custom-result').classList.remove('hidden');
   }

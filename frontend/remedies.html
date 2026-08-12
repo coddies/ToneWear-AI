@@ -3,347 +3,193 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skin Remedies — ToneWear AI</title>
-  <meta name="description" content="AI-generated home remedies for your skin concerns. Personalized recipes with ingredients and steps.">
+  <title>Skincare & Remedies Studio — ToneWear AI</title>
+  <meta name="description" content="AI skincare suggestions and natural remedies matched to skin concerns.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/animations.css">
   <style>
-    /* ── Warning Banner ─────────────────────────── */
-    .disclaimer-banner {
-      background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
-      border: 1px solid rgba(214,158,46,0.35);
-      border-radius: 14px;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 32px;
-      position: sticky;
-      top: calc(var(--topbar-h) + 8px);
-      z-index: var(--z-sticky);
-      box-shadow: 0 4px 20px rgba(214,158,46,0.10);
-    }
-
-    /* ── Concern Cards ───────────────────────────── */
     .concerns-selector-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 32px;
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-6);
     }
 
     .concern-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      border: 2px solid var(--border-default);
-      border-radius: 16px;
-      padding: 24px 16px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-default);
+      padding: var(--sp-6) var(--sp-4);
+      border-radius: var(--radius-default);
       text-align: center;
       cursor: pointer;
-      transition: all var(--t-spring);
+      transition: all var(--t-fast);
     }
 
     .concern-card:hover {
-      border-color: var(--primary);
-      transform: scale(1.03);
+      border-color: var(--text-primary);
+      transform: translateY(-2px);
     }
 
     .concern-card.selected {
-      border-color: var(--primary);
-      background: var(--primary-light);
-      transform: scale(1.05);
-      box-shadow: 0 0 0 3px rgba(26,86,219,0.15);
+      border-color: var(--accent);
+      background-color: var(--accent-light);
     }
 
-    .concern-icon { font-size: 36px; display: block; margin-bottom: 10px; }
-    .concern-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
-
-    /* ── Remedy Cards ────────────────────────────── */
-    .concern-section { margin-bottom: 48px; }
-
-    .concern-section-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .concern-icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 8px;
     }
 
-    .remedy-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-glass);
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: var(--shadow-card);
-      transition: transform var(--t-spring), box-shadow var(--t-base);
-      position: relative;
-    }
-
-    .remedy-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
-
-    .ingredients-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .ingredient-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      background: rgba(26,86,219,0.03);
-      border-radius: 10px;
-    }
-
-    .ingredient-icon { font-size: 20px; flex-shrink: 0; width: 28px; text-align: center; }
-    .ingredient-name { font-weight: 500; font-size: 14px; flex: 1; }
-    .ingredient-amt  { font-size: 12px; color: var(--text-muted); }
-
-    .steps-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .step-row {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    .step-circle {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      background: var(--gradient);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .remedy-meta {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-subtle);
-    }
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .concern-name {
       font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .meta-item strong { color: var(--text-primary); }
-
-    /* ── Bookmark Button ─────────────────────────── */
-    .bookmark-btn {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      border: none;
-      background: rgba(26,86,219,0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      cursor: pointer;
-      transition: all var(--t-fast);
-      flex-shrink: 0;
-    }
-    .bookmark-btn:hover { background: var(--primary-light); transform: scale(1.1); }
-
-    /* ── Clothing Advice Card ────────────────────── */
-    .clothing-advice-card {
-      background: linear-gradient(135deg, rgba(26,86,219,0.06), rgba(124,58,237,0.06));
-      border: 1px solid rgba(26,86,219,0.12);
-      border-radius: 14px;
-      padding: 20px;
-      margin-top: 24px;
-      margin-bottom: 16px;
-    }
-
-    .clothing-advice-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-
-    /* ── Saved Remedies ──────────────────────────── */
-    .saved-section {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-glass);
-      border-radius: 20px;
-      padding: 24px;
-      margin-top: 48px;
-    }
-
-    /* ── Loading State ───────────────────────────── */
-    #remedies-loading {
-      text-align: center;
-      padding: 60px;
-    }
-
-    /* ── Responsive ─────────────────────────────── */
-    @media (max-width: 1023px) {
-      .concerns-selector-grid { grid-template-columns: repeat(3, 1fr); }
+      font-weight: 600;
     }
 
     @media (max-width: 767px) {
-      .concerns-selector-grid { grid-template-columns: repeat(2, 1fr); }
-      .disclaimer-banner { position: static; }
+      .concerns-selector-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="sidebar-overlay" id="sidebar-overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.style.display='none';"></div>
-
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-  <a href="index.html" class="sidebar-logo">
-    <div class="sidebar-logo-icon">✨</div>
-    <span class="sidebar-logo-text">ToneWear AI</span>
-  </a>
-  <nav class="sidebar-nav">
-    <span class="nav-section-label">Main Menu</span>
-    <a href="index.html"    class="nav-item" data-page="index.html">    <span class="nav-item-icon">🏠</span> Home </a>
-    <a href="analyzer.html" class="nav-item" data-page="analyzer.html"><span class="nav-item-icon">🔬</span> Skin Analyzer </a>
-    <a href="tryon.html"    class="nav-item" data-page="tryon.html">    <span class="nav-item-icon">👕</span> Virtual Try-On </a>
-    <a href="glasses.html"  class="nav-item" data-page="glasses.html">  <span class="nav-item-icon">👓</span> Glasses Try-On </a>
-    <a href="remedies.html" class="nav-item active" data-page="remedies.html"><span class="nav-item-icon">🌿</span> Skin Remedies </a>
-    <span class="nav-section-label" style="margin-top:8px">Account</span>
-    <a href="history.html"  class="nav-item" data-page="history.html">  <span class="nav-item-icon">📋</span> My History </a>
-    <a href="#"             class="nav-item">                            <span class="nav-item-icon">⚙️</span> Settings </a>
+<div class="app-shell">
+  <!-- ══════════════════════════════════════════════
+       GLOBAL NAVBAR
+       ══════════════════════════════════════════════ -->
+  <nav class="tw-navbar">
+    <a href="index.html" class="tw-navbar-brand">
+      <span class="tw-navbar-brand-icon">✨</span>
+      <span>ToneWear AI</span>
+    </a>
+    
+    <div class="tw-navbar-links">
+      <a href="shop.html" class="tw-navbar-link">Shop</a>
+      <a href="shop.html?stylist=true" class="tw-navbar-link">AI Stylist</a>
+      <a href="analyzer.html" class="tw-navbar-link">Skin Analysis</a>
+      <a href="tryon.html" class="tw-navbar-link">Virtual Try-On</a>
+      <a href="glasses.html" class="tw-navbar-link">Glasses</a>
+      <a href="history.html" class="tw-navbar-link">My Looks</a>
+    </div>
+    
+    <div class="tw-navbar-actions">
+      <a href="shop.html" class="tw-navbar-btn" title="Search">🔍</a>
+      <a href="history.html" class="tw-navbar-btn" title="Saved Looks">🖤</a>
+      <div class="tw-navbar-profile" onclick="window.location.href='login.html'">
+        <div class="tw-navbar-avatar" id="navbar-avatar">U</div>
+      </div>
+    </div>
   </nav>
-  <div class="sidebar-footer">
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" id="sidebar-avatar">U</div>
-      <div class="sidebar-user-info">
-        <div class="sidebar-user-name"  id="sidebar-user-name">User</div>
-        <div class="sidebar-user-email" id="sidebar-user-email"></div>
-      </div>
-      <button class="sidebar-logout-btn" id="logout-btn">⏻</button>
-    </div>
-  </div>
-</aside>
 
-<!-- Main Content -->
-<div class="main-content">
-  <div class="topbar">
-    <button class="topbar-menu-btn" id="menu-btn">☰</button>
-    <div class="topbar-title">🌿 Skin Remedies</div>
-    <div class="topbar-actions">
-      <button id="theme-toggle" class="btn btn-ghost btn-icon"><span id="theme-icon">🌙</span></button>
-    </div>
-  </div>
-
-  <div class="page-container">
-
-    <!-- ⚠️ ALWAYS VISIBLE DISCLAIMER -->
-    <div class="disclaimer-banner">
-      <span style="font-size:22px;flex-shrink:0">⚠️</span>
-      <div>
-        <div class="font-semibold" style="font-size:14px;color:#92600a">Medical Disclaimer</div>
-        <div style="font-size:13px;color:#78500a;line-height:1.4">
-          These are <strong>AI-generated suggestions only</strong>. Always consult a qualified dermatologist before starting any skin treatment. Stop use if irritation occurs.
-        </div>
-      </div>
-    </div>
-
-    <!-- From Analysis Banner -->
-    <div id="from-analysis-banner" class="hidden mb-6" style="background:linear-gradient(135deg,rgba(56,161,105,0.08),rgba(26,86,219,0.05));border:1px solid rgba(56,161,105,0.2);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:16px">
-      <span style="font-size:24px">🔬</span>
-      <div>
-        <div class="font-semibold text-sm">From your skin analysis</div>
-        <div class="text-sm text-muted">Detected concerns: <span class="detected-concerns-list font-medium"></span></div>
-      </div>
-    </div>
-
-    <!-- ── CONCERN SELECTOR ────────────────────── -->
-    <div class="glass-card mb-6 fade-up">
-      <h2 style="font-size:22px;font-weight:700;margin-bottom:6px">What's your skin concern?</h2>
-      <p class="text-muted text-sm mb-6">Select one or more concerns to get personalized home remedies</p>
-
-      <div class="concerns-selector-grid">
-        <div class="concern-card" data-concern="Acne">
-          <span class="concern-icon">🔴</span>
-          <div class="concern-name">Acne & Pimples</div>
-        </div>
-        <div class="concern-card" data-concern="Dark Spots">
-          <span class="concern-icon">🟤</span>
-          <div class="concern-name">Dark Spots & Hyperpigmentation</div>
-        </div>
-        <div class="concern-card" data-concern="Oily Skin">
-          <span class="concern-icon">💧</span>
-          <div class="concern-name">Oily Skin</div>
-        </div>
-        <div class="concern-card" data-concern="Dry Skin">
-          <span class="concern-icon">🏜️</span>
-          <div class="concern-name">Dry & Flaky Skin</div>
-        </div>
-        <div class="concern-card" data-concern="Uneven Skin Tone">
-          <span class="concern-icon">😶</span>
-          <div class="concern-name">Uneven Skin Tone</div>
-        </div>
-        <div class="concern-card" data-concern="Dark Circles">
-          <span class="concern-icon">🌙</span>
-          <div class="concern-name">Dark Circles</div>
-        </div>
+  <!-- ══════════════════════════════════════════════
+       MAIN CONTENT
+       ══════════════════════════════════════════════ -->
+  <main class="main-content">
+    <div class="page-container" style="max-width:800px;">
+      
+      <!-- Warning Banner -->
+      <div class="disclaimer-card" style="margin-top:0; margin-bottom:var(--sp-6); background-color:var(--warning-light);">
+        <strong style="color:var(--warning)"> Skincare Recommendation Disclaimer:</strong> These suggestions are AI observations and general skincare suggestions only. Always consult a qualified dermatologist for persistent or serious concerns. Stop use immediately if irritation occurs.
       </div>
 
-      <div style="text-align:center">
-        <button class="btn btn-primary btn-xl" id="get-remedies-btn" disabled>
-          🌿 Get My Personalized Remedies
-        </button>
-        <p class="text-xs text-muted mt-3">AI generates 3 remedies per concern with full ingredients + steps</p>
-      </div>
-    </div>
-
-    <!-- Loading -->
-    <div id="remedies-loading" class="hidden">
-      <div class="spinner-ring-lg animate-spin mx-auto mb-5"></div>
-      <div class="font-semibold mb-2" style="font-size:18px">Generating your remedies...</div>
-      <div class="text-muted text-sm">AI is crafting personalized recipes for your concerns</div>
-    </div>
-
-    <!-- ── RESULTS SECTION ─────────────────────── -->
-    <div id="remedies-results-section" class="hidden">
-      <div id="remedies-cards-container">
-        <!-- Populated by remedies.js -->
-      </div>
-    </div>
-
-    <!-- ── SAVED REMEDIES ──────────────────────── -->
-    <div id="saved-remedies-section" class="saved-section hidden fade-up">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <!-- Analysis Info Banner -->
+      <div id="from-analysis-banner" class="hidden fashion-card p-4 flex items-center gap-4 mb-6">
+        <span style="font-size:24px;">🔬</span>
         <div>
-          <h3 style="font-size:18px;font-weight:700">📌 My Saved Remedies</h3>
-          <p class="text-sm text-muted"><span id="saved-remedies-count">0</span> remedies saved</p>
+          <div class="font-semibold text-sm">Detected Analysis Concerns</div>
+          <p class="text-xs text-muted">Concerns found: <span class="detected-concerns-list font-semibold"></span></p>
         </div>
-        <button id="clear-saved-btn" class="btn btn-danger btn-sm">🗑 Clear All</button>
       </div>
-      <div id="saved-list">
-        <p class="text-muted text-sm">Click the 🔖 bookmark on any remedy to save it here.</p>
-      </div>
-    </div>
 
-  </div>
+      <!-- Selector Section -->
+      <div class="fashion-card p-6 mb-6">
+        <span class="editorial-step-num uppercase">Remedies Studio</span>
+        <h2 class="editorial-title mt-1 mb-2" style="font-size:24px;">Personalized Remedies</h2>
+        <p class="text-xs text-muted mb-6">Select your skincare concerns to formulate targeted recipes using traditional ingredients.</p>
+
+        <div class="concerns-selector-grid">
+          <div class="concern-card" data-concern="Acne">
+            <span class="concern-icon">🔴</span>
+            <div class="concern-name">Acne & Pimples</div>
+          </div>
+          <div class="concern-card" data-concern="Dark Spots">
+            <span class="concern-icon">🟤</span>
+            <div class="concern-name">Hyperpigmentation</div>
+          </div>
+          <div class="concern-card" data-concern="Oily Skin">
+            <span class="concern-icon">💧</span>
+            <div class="concern-name">Oily Skin</div>
+          </div>
+          <div class="concern-card" data-concern="Dry Skin">
+            <span class="concern-icon">🏜️</span>
+            <div class="concern-name">Dry & Flaky</div>
+          </div>
+          <div class="concern-card" data-concern="Uneven Skin Tone">
+            <span class="concern-icon">😶</span>
+            <div class="concern-name">Uneven Tone</div>
+          </div>
+          <div class="concern-card" data-concern="Dark Circles">
+            <span class="concern-icon">🌙</span>
+            <div class="concern-name">Dark Circles</div>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-primary" id="get-remedies-btn" disabled>Personalize Skincare Recipes</button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="remedies-loading" class="hidden text-center py-12 flex flex-col items-center justify-center gap-2">
+        <span class="upload-zone-icon animate-spin">⏳</span>
+        <div class="font-semibold text-sm">Formulating recipes...</div>
+        <p class="text-xs text-muted">Building ingredient lists and instructions.</p>
+      </div>
+
+      <!-- Dynamic Results list -->
+      <div id="remedies-results-section" class="hidden">
+        <div id="remedies-cards-container" class="flex flex-col gap-6"></div>
+      </div>
+
+      <!-- Saved database panel -->
+      <div id="saved-remedies-section" class="saved-section hidden fashion-card p-6 mt-6">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h3 class="editorial-title" style="font-size:18px;">Saved Recipes</h3>
+            <p class="text-xs text-muted"><span id="saved-remedies-count">0</span> recipes catalogued</p>
+          </div>
+          <button id="clear-saved-btn" class="btn btn-secondary" style="padding:6px 12px;font-size:10px;">Clear All</button>
+        </div>
+        <div id="saved-list" class="flex flex-col gap-4">
+          <p class="text-xs text-muted">Select bookmarks on generated recipes to store them here.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
 </div>
 
-<!-- Bottom Nav -->
-<nav class="bottom-nav">
-  <div class="bottom-nav-inner">
-    <a href="index.html"    class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
-    <a href="analyzer.html" class="bottom-nav-item"><span class="nav-icon">🔬</span>Analyze</a>
-    <a href="tryon.html"    class="bottom-nav-item"><span class="nav-icon">👕</span>Try-On</a>
-    <a href="glasses.html"  class="bottom-nav-item"><span class="nav-icon">👓</span>Glasses</a>
-    <a href="remedies.html" class="bottom-nav-item active"><span class="nav-icon">🌿</span>Remedies</a>
-  </div>
+<!-- Mobile Bottom Nav -->
+<nav class="mobile-nav-bar">
+  <a href="shop.html" class="mobile-nav-item">
+    <span class="mobile-nav-icon">🛍️</span>
+    <span>Shop</span>
+  </a>
+  <a href="analyzer.html" class="mobile-nav-item">
+    <span class="mobile-nav-icon">🔬</span>
+    <span>Analyze</span>
+  </a>
+  <a href="tryon.html" class="mobile-nav-item">
+    <span class="mobile-nav-icon">👕</span>
+    <span>Try-On</span>
+  </a>
+  <a href="history.html" class="mobile-nav-item active">
+    <span class="mobile-nav-icon">📋</span>
+    <span>My Looks</span>
+  </a>
 </nav>
 
 <script src="js/app.js"></script>

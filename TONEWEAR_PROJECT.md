@@ -21,6 +21,7 @@ Selfie Upload → Skin AI → Color Profile → RAG Search → AI Ranking → Vi
 
 | Cheez | Details |
 |---|---|
+| **Premium UI/UX Redesign** | Fully complete (warm ivory theme, fixed topbar navigation, 2-column shop dashboard, responsive panels) |
 | **Frontend** — 8 pages | index, shop, analyzer, tryon, glasses, remedies, login, signup |
 | **Backend** — FastAPI | 6 API routes, 4 services |
 | **Groq AI** (replaces Claude) | `llama-3.3-70b-versatile` — outfit ranking + explanations + remedies + glasses |
@@ -31,6 +32,7 @@ Selfie Upload → Skin AI → Color Profile → RAG Search → AI Ranking → Vi
 | **Demo mode** | Sab kuch bina API ke bhi chalega (mock data) |
 | **GitHub** | https://github.com/coddies/ToneWear-AI |
 | **uv** package management | Project-level `.venv`, no global pip |
+
 
 ---
 

@@ -1,6 +1,6 @@
 """
 ToneWear AI — Recommendation Service
-Combines RAG retrieval + Claude AI ranking/explanation
+Combines RAG retrieval + Groq AI ranking/explanation
 """
 
 import os
@@ -10,7 +10,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY", "")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_MODEL   = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 
 class RecommendationService:
@@ -26,10 +27,10 @@ class RecommendationService:
         top_n: int = 6
     ) -> dict:
         """
-        Full RAG + Claude pipeline:
+        Full RAG + Groq pipeline:
         1. Build query from profile + occasion + budget
         2. Vector search via RAG service
-        3. Claude ranks top results + generates explanations
+        3. Groq (llama-3.3-70b) ranks top results + generates explanations
         4. Return ranked products with match_score + match_reason
         """
         from services.rag_service import rag_service
@@ -61,9 +62,9 @@ class RecommendationService:
                 "color_insight": ""
             }
 
-        # ── Claude ranking (or mock if no key) ────────────
-        if CLAUDE_API_KEY:
-            ranked = await self._claude_rank(
+        # ── Groq ranking (or mock if no key) ─────────────
+        if GROQ_API_KEY:
+            ranked = await self._groq_rank(
                 candidates[:12],
                 profile=profile,
                 occasion=occasion,
@@ -79,8 +80,8 @@ class RecommendationService:
             "color_insight": self._color_insight(profile)
         }
 
-    # ── Claude Ranking ────────────────────────────────────────────────────────
-    async def _claude_rank(
+    # ── Groq Ranking ─────────────────────────────────────────────────────────
+    async def _groq_rank(
         self,
         candidates: list,
         profile: dict,
@@ -88,13 +89,13 @@ class RecommendationService:
         budget: Optional[int],
         query: str
     ) -> list:
-        """Use Claude to rank candidates and generate explanations."""
+        """Use Groq (llama-3.3-70b) to rank candidates and generate explanations."""
         try:
-            import anthropic
+            from groq import Groq
 
-            client = anthropic.Anthropic(api_key=CLAUDE_API_KEY)
+            client = Groq(api_key=GROQ_API_KEY)
 
-            # Build candidate summary for Claude
+            # Build candidate summary
             candidate_text = ""
             for i, p in enumerate(candidates):
                 candidate_text += (
@@ -126,37 +127,36 @@ CANDIDATE PRODUCTS:
 
 TASK: Rank the TOP 6 most suitable products for this user. For each, provide:
 1. A match_score (0-100) based on skin tone compatibility, occasion fit, style match, and color harmony
-2. A match_reason (1-2 sentences explaining WHY this suits their specific skin tone and style)
+2. A match_reason (1-2 sentences in English explaining WHY this suits their specific skin tone and style)
 
-Respond ONLY with a valid JSON array, no other text:
+Respond ONLY with a valid JSON array, no markdown, no explanation:
 [
   {{
     "product_id": "...",
     "match_score": 94,
     "match_reason": "..."
-  }},
-  ...
+  }}
 ]"""
 
-            response = client.messages.create(
-                model="claude-sonnet-4-5",
+            response = client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=[{"role": "user", "content": prompt}],
                 max_tokens=1500,
-                messages=[{"role": "user", "content": prompt}]
+                temperature=0.3
             )
 
-            text = response.content[0].text.strip()
+            text = response.choices[0].message.content.strip()
+
             # Extract JSON array
-            if text.startswith("["):
-                rankings = json.loads(text)
-            else:
+            if "[" in text:
                 start = text.find("[")
                 end   = text.rfind("]") + 1
                 rankings = json.loads(text[start:end])
+            else:
+                rankings = json.loads(text)
 
             # Merge rankings back into product objects
             ranked_products = []
-            ranking_map = {r["product_id"]: r for r in rankings}
-
             for r in rankings:
                 pid = r["product_id"]
                 product = next((p for p in candidates if p["id"] == pid), None)
@@ -169,7 +169,7 @@ Respond ONLY with a valid JSON array, no other text:
             return ranked_products
 
         except Exception as e:
-            print(f"⚠️  Claude ranking error: {e} — using mock ranking")
+            print(f"[WARNING] Groq ranking error: {e} - using mock ranking")
             return self._mock_rank(candidates[:6], profile, occasion)
 
     # ── Mock Ranking (no API key) ─────────────────────────────────────────────

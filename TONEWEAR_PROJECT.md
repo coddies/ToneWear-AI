@@ -174,10 +174,10 @@ API Docs: `http://localhost:8000/docs`
 ### Frontend start karo:
 ```bash
 cd frontend
-python -m http.server 3000
+uv run python -m http.server 3001
 ```
-Frontend: `http://localhost:3000`
-Main Page: `http://localhost:3000/shop.html`
+Frontend: `http://localhost:3001`
+Main Page: `http://localhost:3001/shop.html`
 
 ---
 
